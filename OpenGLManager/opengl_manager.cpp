@@ -18,7 +18,6 @@ GLFWwindow* OpenGLManager::CreateGLFWWindow()
 												  this->m_windowHeight,
 												  this->m_windowName, NULL, NULL);
 
-		this->m_windowInstance = NULL;
 		if (this->m_windowInstance == NULL)
 		{
 			const char* error = "Failed to create window instance.";
