@@ -1,3 +1,5 @@
+#pragma once
+
 #include <mutex>
 #include <random>
 #include <thread>
@@ -5,166 +7,142 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "OpenGLManager/opengl_manager.h"
-#include "Util/helpers.h"
-
 #include "spdlog/spdlog.h"
 
-GLuint CreateShaders()
-{
-	const char* vertexShaderSource = R"V0G0N(
-	#version 330 core
+#include "ElementBufferObject.h"
+#include "GLShaderProgram.h"
+#include "GLFragmentShader.h"
+#include "GLVertexShader.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
+#include "WindowManager.h"
 
-	layout (location = 0) in vec3 aPos;
-	void main()
-	{
-		gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-	}
-	)V0G0N";
 
-	const char* fragmentShaderSource = R"V0G0N(
-	#version 330 core
 
-	out vec4 FragColor;
-	void main()
-	{
-		FragColor = vec4(0.31f, 0.878f, 0.922f, 1.0f);
-	}
-	)V0G0N";
 
-	// Create Vertex Shader Object and get its reference
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	// Attach Vertex Shader source to the Vertex Shader Object
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	// Compile the Vertex Shader into machine code
-	glCompileShader(vertexShader);
 
-	// Create Fragment Shader Object and get its reference
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	// Attach Fragment Shader source to the Fragment Shader Object
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	// Compile the Vertex Shader into machine code
-	glCompileShader(fragmentShader);
-
-	// Create Shader Program Object and get its reference
-	GLuint shaderProgram = glCreateProgram();
-	// Attach the Vertex and Fragment Shaders to the Shader Program
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	// Wrap-up/Link all the shaders together into the Shader Program
-	glLinkProgram(shaderProgram);
-
-	// Delete the now useless Vertex and Fragment Shader objects
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-	return shaderProgram;
-}
-
-GLuint* CreateVertexObjects()
-{
-	// Vertices coordinates
-	GLfloat vertices[] =
-	{
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
-		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f // Upper corner
-	};
-
-	// Create reference containers for the Vartex Array Object and the Vertex Buffer Object
-	static GLuint VAO, VBO;
-
-	// Generate the VAO and VBO with only 1 object each
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	// Make the VAO the current Vertex Array Object by binding it
-	glBindVertexArray(VAO);
-
-	// Bind the VBO specifying it's a GL_ARRAY_BUFFER
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// Introduce the vertices into the VBO
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Configure the Vertex Attribute so that OpenGL knows how to read the VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
-	// Enable the Vertex Attribute so that OpenGL knows to use it
-	glEnableVertexAttribArray(NULL);
-
-	// Bind both the VBO and VAO to 0 so that we don't accidentally modify the VAO and VBO we created
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	GLuint result[2] = { VAO, VBO };
-	return result;
-}
-
-void draw(GLfloat* color)
-{
-
-}
+//EXERCISES:
+//
+//	1.	Try to draw 2 triangles next to each other using glDrawArrays by adding more vertices to your data
+//	2.	create the same 2 triangles using two different VAOs and VBOs for their data : solution.
+//	3.	Create two shader programs where the second program uses a different fragment shader that outputs the color yellow; 
+//	  	draw both triangles again where one outputs the color yellow.
 
 
 #ifdef _DEBUG
 int main()
-#else
-int WinMain()
-#endif // _DEBUG
 {
+	// https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
+	spdlog::set_pattern("%^[%l][%!: %#] [thread %t]%$: %v");
+	spdlog::set_level(spdlog::level::debug);
+#else
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	// Setup to log to file instead
+	spdlog::set_level(spdlog::level::off);
+#endif // _DEBUG
+
+	// Formatting Guide: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
 	try
 	{
-		// Create window with 800x800 resolution.
-		auto WindowManager = OpenGLManager("OpenGL Window");
-		WindowManager.SetResolution(1366, 720);
-		auto Window = WindowManager.CreateGLFWWindow();
+		GLfloat Background[] = {0,0,0,1};
+		//GLfloat vertices[] =
+		//{
+		//	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
+		//	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
+		//	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner
 
-		auto ShaderProgram = CreateShaders();
-		auto VertexObjects = CreateVertexObjects();
-		auto VAO = VertexObjects[0];
-		auto VBO = VertexObjects[1];
+		//	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
+		//	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
+		//	0.0f, -1.0f * float(sqrt(3)) * 2 / 3, 0.0f // Upper corner
+		//};
 
-		static std::default_random_engine rand(std::time(0));
-		static std::uniform_real_distribution<> distributor(0, 1); // range [0, 1)
-		auto r = distributor(rand);
-		auto g = distributor(rand);
-		auto b = distributor(rand);
-		auto a = distributor(rand);
-		GLfloat Background[4] = { r, g, b, a };
+		//GLfloat vertices[] = {
+		//	// first triangle
+		//	 0.5f,  0.5f, 0.0f,  // top right
+		//	 0.5f, -0.5f, 0.0f,  // bottom right
+		//	-0.5f,  0.5f, 0.0f,  // top left 
+		//	// second triangle
+		//	 0.5f, -0.5f, 0.0f,  // bottom right
+		//	-0.5f, -0.5f, 0.0f,  // bottom left
+		//	-0.5f,  0.5f, 0.0f   // top left
+		//};
 
-		// Tell OpenGL which Shader Program we want to use
-		glUseProgram(ShaderProgram);
+		GLuint indices[] = {  // note that we start from 0!
+			//0, 1, 3,   // first triangle
+			//1, 2, 3    // second triangle
+			0, 1, 2
+		};
 
-		// Bind the VAO so OpenGL knows to use it
-		glBindVertexArray(VAO);
+		GLfloat triangle1[] =
+		{
+			.25, 0, 0,     // bottom left
+			.5, 0, 0,	   // bottom right
+			.365, .365, 0, // top
+
+			//-.25, 0, 0,     // bottom left
+			//-.5, 0, 0,	   // bottom right
+			//-.365, .365, 0  // top
+		};
+
+		GLfloat triangle2[] =
+		{
+			-.25, 0, 0,     // bottom left
+			-.5, 0, 0,	   // bottom right
+			-.365, .365, 0  // top
+		};
+
+		WindowManager WindowManager("OpenGL Window");
+		GLFWwindow * Window = WindowManager.CreateGLFWWindow();
+
+		GLShader::VertexArrayObject VAO1;
+		GLShader::VertexArrayObject VAO2;
+		GLShader::VertexBufferObject VBO1(triangle1, sizeof(triangle1));
+		GLShader::VertexBufferObject VBO2(triangle2, sizeof(triangle2));
+
+		size_t vertexSize = sizeof(triangle1) + sizeof(triangle2);
+
+		GLShader::ElementBufferObject EBO1;
+
+
+		GLShader::GLVertexShader VertexShader("default.vert");
+		GLShader::GLFragmentShader FragmentShader("default.frag");
+		GLShader::GLFragmentShader FragmentShader2("default2.frag");
+		GLShader::GLShaderProgram ShaderProgram1;
+		GLShader::GLShaderProgram ShaderProgram2;
+
+		ShaderProgram1.AttachShaders(VertexShader, FragmentShader);
+		ShaderProgram2.AttachShaders(VertexShader, FragmentShader2);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		while (!glfwWindowShouldClose(Window))
 		{
+			WindowManager.ProcessInput(Window);
 			WindowManager.FillScreenColor(Background);
 
-			// Draw the triangle using the GL_TRIANGLES primitive
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glUseProgram(ShaderProgram1.GetID());
+			VAO1.LinkBufferObjects(0, EBO1, VBO1);
+			glDrawArrays(GL_TRIANGLES, 0, sizeof(triangle1) / 3);
+
+			glUseProgram(ShaderProgram2.GetID());
+			VAO2.LinkBufferObjects(0, EBO1, VBO2);
+			glDrawArrays(GL_TRIANGLES, 0, sizeof(triangle2) / 3);
 
 			// Swap the back buffer with the front buffer
 			glfwSwapBuffers(Window);
 
+
+			SPDLOG_TRACE("POLL EVENTS");
+
 			// Listen for events on the window.
 			glfwPollEvents();
 		}
-
-		spdlog::info("Deleting Vertex Objects.");
-
-		// Delete all the objects we've created
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteProgram(ShaderProgram);
 	}
 	catch (const std::exception& ex)
 	{
-		spdlog::error(std::string("Termination Reason: ") + ex.what());
+		SPDLOG_CRITICAL("Termination Reason: {}", ex.what());
 		return -1;
 	}
 
-
 	return 0;
 }
-
-
