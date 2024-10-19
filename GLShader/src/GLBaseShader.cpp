@@ -41,7 +41,9 @@ namespace GLShader
 		ShaderType(type), 
 		ShaderTypeString(typeString)
 	{
-		std::filesystem::path basePath("C:\\workspace\\OpenGL_Course_Practical\\resources\\shaders");
+
+		// TODO:  Add this path as a CMake resource
+		std::filesystem::path basePath("C:\\workspace\\OpenGL_Render\\resources\\shaders");
 		SPDLOG_DEBUG("CREATE {} SHADER: {}", typeString, path.string());
 		const std::string& ShaderString = readFile(basePath / path);
 		const char* ShaderCode = ShaderString.c_str();

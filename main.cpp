@@ -17,18 +17,6 @@
 #include "VertexBufferObject.h"
 #include "WindowManager.h"
 
-
-
-
-
-//EXERCISES:
-//
-//	1.	Try to draw 2 triangles next to each other using glDrawArrays by adding more vertices to your data
-//	2.	create the same 2 triangles using two different VAOs and VBOs for their data : solution.
-//	3.	Create two shader programs where the second program uses a different fragment shader that outputs the color yellow; 
-//	  	draw both triangles again where one outputs the color yellow.
-
-
 #ifdef _DEBUG
 int main()
 {
@@ -68,11 +56,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//	-0.5f,  0.5f, 0.0f   // top left
 		//};
 
-		GLuint indices[] = {  // note that we start from 0!
-			//0, 1, 3,   // first triangle
-			//1, 2, 3    // second triangle
-			0, 1, 2
-		};
+		//GLuint indices[] = {  // note that we start from 0!
+		//	//0, 1, 3,   // first triangle
+		//	//1, 2, 3    // second triangle
+		//	0, 1, 2
+		//};
 
 		GLfloat triangle1[] =
 		{
@@ -97,13 +85,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		GLShader::VertexArrayObject VAO1;
 		GLShader::VertexArrayObject VAO2;
+		GLShader::ElementBufferObject EBO1;
 		GLShader::VertexBufferObject VBO1(triangle1, sizeof(triangle1));
 		GLShader::VertexBufferObject VBO2(triangle2, sizeof(triangle2));
-
-		size_t vertexSize = sizeof(triangle1) + sizeof(triangle2);
-
-		GLShader::ElementBufferObject EBO1;
-
 
 		GLShader::GLVertexShader VertexShader("default.vert");
 		GLShader::GLFragmentShader FragmentShader("default.frag");
@@ -130,7 +114,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			// Swap the back buffer with the front buffer
 			glfwSwapBuffers(Window);
-
 
 			SPDLOG_TRACE("POLL EVENTS");
 

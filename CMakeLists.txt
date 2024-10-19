@@ -6,12 +6,12 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/thirdparty/modules)
 set(GLFW3_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/GLFW/glfw-3.4)
 
-project(OpenGL_Project)
+project(OpenGL_Render)
 
 cmake_policy(SET CMP0074 NEW)
 
 if(WIN32)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
 endif(WIN32)
 
 add_subdirectory(GLBufferObjects)
@@ -21,16 +21,16 @@ add_subdirectory(thirdparty)
 
 find_package(GLFW3 REQUIRED)
 
-add_executable(OpenGL_Project main.cpp)
+add_executable(OpenGL_Render main.cpp)
 
-target_link_libraries(OpenGL_Project GLBufferObjects)
-target_link_libraries(OpenGL_Project GLShader)
-target_link_libraries(OpenGL_Project GLWindowManager) 
+target_link_libraries(OpenGL_Render GLBufferObjects)
+target_link_libraries(OpenGL_Render GLShader)
+target_link_libraries(OpenGL_Render GLWindowManager) 
 
-target_link_libraries(OpenGL_Project GLAD) 
-target_link_libraries(OpenGL_Project GLFW3)
-target_link_libraries(OpenGL_Project spdlog)
+target_link_libraries(OpenGL_Render GLAD) 
+target_link_libraries(OpenGL_Render GLFW3)
+target_link_libraries(OpenGL_Render spdlog)
 
-target_compile_definitions(OpenGL_Project PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG)
+target_compile_definitions(OpenGL_Render PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG)
 
 
