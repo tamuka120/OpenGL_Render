@@ -1,3 +1,7 @@
+set(RESOURCES_DIR ${CMAKE_SOURCE_DIR}/resources)
+set(SHADER_DIR ${RESOURCES_DIR}/shaders)
+configure_file (resources.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/resources.h) 
+
 add_library(
     GLShader
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GLShaderProgram.cpp
@@ -7,7 +11,4 @@ add_library(
 target_include_directories(GLShader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(GLShader PRIVATE GLAD)
-# target_link_libraries(GLShader PRIVATE UTIL)
 target_link_libraries(GLShader PRIVATE spdlog)
-
-target_compile_definitions(GLShader PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)

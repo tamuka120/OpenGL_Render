@@ -1,0 +1,9 @@
+#include <filesystem>
+
+#ifndef RESOURCES_H
+#define RESOURCES_H
+
+const std::filesystem::path RESOURCES_DIR = "@RESOURCES_DIR@";
+const std::filesystem::path SHADER_DIR = "@SHADER_DIR@";
+
+#endif // RESOURCES_H

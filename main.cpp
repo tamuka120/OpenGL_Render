@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Formatting Guide: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
 	try
 	{
-		GLfloat Background[] = {0,0,0,1};
+		GLfloat Background[] = {(51.f/255), (76.f/255), (76.f/255),1};
 		//GLfloat vertices[] =
 		//{
 		//	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
