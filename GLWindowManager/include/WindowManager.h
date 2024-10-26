@@ -20,7 +20,7 @@ private:
 	/// <param name="window">The window instance. Unused.</param>
 	/// <param name="width">The width of the viewport.</param>
 	/// <param name="height">The height of the viewport.</param>
-	static void ViewportResizeCb(GLFWwindow* window, float width, float height);
+	static void ViewportResizeCb(GLFWwindow* window, int width, int height);
 
 public:
 	/// <summary>

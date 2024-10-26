@@ -20,6 +20,7 @@ add_subdirectory(GLWindowManager)
 add_subdirectory(thirdparty)
 
 find_package(GLFW3 REQUIRED)
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 
 add_executable(OpenGL_Render main.cpp)
 
@@ -31,6 +32,9 @@ target_link_libraries(OpenGL_Render GLAD)
 target_link_libraries(OpenGL_Render GLFW3)
 target_link_libraries(OpenGL_Render spdlog)
 
-target_compile_definitions(OpenGL_Render PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG)
+set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=-*,modernize-*")
+set_target_properties(OpenGL_Render PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 
-
+target_compile_definitions(OpenGL_Render 
+	PRIVATE 
+	SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG)

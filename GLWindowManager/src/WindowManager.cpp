@@ -68,7 +68,7 @@ void WindowManager::ProcessInput(GLFWwindow* window)
 	}
 }
 
-void WindowManager::ViewportResizeCb(GLFWwindow* /*window*/, float width, float height)
+void WindowManager::ViewportResizeCb(GLFWwindow* /*window*/, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
@@ -78,6 +78,11 @@ void WindowManager::SetResolution(int width, int height)
 	SPDLOG_INFO("Setting resolution to {}x{}", width, height);
 	m_windowHeight = height;
 	m_windowWidth = width;
+
+	if (this->m_windowInstance)
+	{
+		glfwSetWindowSize(this->m_windowInstance, m_windowWidth, m_windowHeight);
+	}
 }
 
 void WindowManager::FillScreenColor(const GLfloat RGBA[])
@@ -114,10 +119,10 @@ WindowManager::WindowManager(const char* name)
 	// modern features. Legacy or backwards-compatible functions are not
 	// included.
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
+	//glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 
 	m_windowName = name;
-	SetResolution(2560, 1440);
+	SetResolution(400, 400);
 }
 
 WindowManager::~WindowManager()

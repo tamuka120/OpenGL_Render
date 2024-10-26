@@ -26,6 +26,8 @@ namespace GLShader
 		SPDLOG_TRACE("ATTACH FRAGMENT SHADER {} TO SHADER_PROGRAM {}", Fragment.GetID(), ID);
 		glAttachShader(ID, Fragment.GetID());
 
+		glBindAttribLocation(ID, 0, "vertex_position");
+
 		// Wrap-up/Link all the shaders together into the Shader Program
 		glLinkProgram(ID);
 		compileErrors();

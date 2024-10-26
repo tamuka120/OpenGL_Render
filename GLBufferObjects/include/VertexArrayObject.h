@@ -38,8 +38,16 @@ public:
 	/// </summary>
 	void LinkBufferObjects(const GLuint layout, const ElementBufferObject& EBO, const VertexBufferObject& VBO) const;
 
+	size_t GetLinkedObjectsSize()
+	{
+		return linkedObjectsTotalSize;
+	}
+
 	VertexArrayObject();
 	~VertexArrayObject();
+
+private:
+	size_t linkedObjectsTotalSize = 0;
 };
 }
 
