@@ -8,19 +8,11 @@ namespace GLShader
 class ElementBufferObject : public BufferObject
 {
 public:
-	virtual void Bind() const
-	{
-		if(ID == 0xFFFFFFFF)
-		{
-			return;
-		}
-		BufferObject::Bind(GL_ELEMENT_ARRAY_BUFFER); 
-	}
-
-	virtual void Unbind() const { BufferObject::Unbind(GL_ELEMENT_ARRAY_BUFFER); };
+	virtual void Bind() const;
+	virtual void Unbind() const;
 
 	ElementBufferObject(){};
-	ElementBufferObject(const GLuint* const indices, int size);
+	ElementBufferObject(const GLuint* indices, int size);
 	~ElementBufferObject();
 };
 }

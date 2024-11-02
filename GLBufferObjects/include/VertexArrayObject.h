@@ -36,18 +36,23 @@ public:
 	/// Links Buffer objects to this Array Object.
 	/// <param name="layout">Layout. More Information required</param>
 	/// </summary>
-	void LinkBufferObjects(const GLuint layout, const ElementBufferObject& EBO, const VertexBufferObject& VBO) const;
+	void LinkBuffers();
 
-	size_t GetLinkedObjectsSize()
-	{
-		return linkedObjectsTotalSize;
-	}
+	void BindAllBuffers() const;
 
-	VertexArrayObject();
-	~VertexArrayObject();
+	void SetLayout(GLuint value) { layout = value; }
+	GLuint GetLayout() const { return layout; }
+
+	size_t GetVertexBufferSize() const { return VertexBuffer->GetSize(); }
+
+	VertexArrayObject(ElementBufferObject* EBO, VertexBufferObject* VBO);
+	virtual ~VertexArrayObject();
 
 private:
 	size_t linkedObjectsTotalSize = 0;
+	GLuint layout = 0;
+	ElementBufferObject* ElementBuffer;
+	VertexBufferObject* VertexBuffer;
 };
 }
 

@@ -4,31 +4,36 @@ namespace GLShader
 {
 	void VertexArrayObject::Bind() const
 	{
-		SPDLOG_TRACE("BIND {}", ID);
+		SPDLOG_DEBUG("VAO BIND {}", ID);
 		glBindVertexArray(ID);
 	}
 	void VertexArrayObject::Unbind() const
 	{
-		SPDLOG_TRACE("UNBIND {}", ID);
+		SPDLOG_TRACE("VAO UNBIND {}", ID);
 		glBindVertexArray(0);
 	}
-	
-	void VertexArrayObject::LinkBufferObjects(const GLuint layout, const ElementBufferObject& EBO, const VertexBufferObject& VBO) const
+
+	void VertexArrayObject::BindAllBuffers() const
 	{
 		Bind();
-		VBO.Bind();
-		EBO.Bind();
-		SPDLOG_TRACE("VAO({}) LINK VBO({}), EBO({})", ID, VBO.ID, EBO.ID);
+		VertexBuffer->Bind();
+		ElementBuffer->Bind();
+	}
+
+	void VertexArrayObject::LinkBuffers()
+	{
+		SPDLOG_TRACE("VAO({}) LINK VBO({}), EBO({})", ID, VertexBuffer->ID, ElementBuffer->ID);
 		glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(layout);
 	}
 	
-	VertexArrayObject::VertexArrayObject()
+	VertexArrayObject::VertexArrayObject(ElementBufferObject* EBO, VertexBufferObject* VBO):
+		ElementBuffer(EBO),
+		VertexBuffer(VBO)
 	{
-		Bind();
-		SPDLOG_DEBUG("INITIALISE VAO {}", ID);
 		glGenVertexArrays(1, &ID);
-		Unbind();
+		SPDLOG_DEBUG("GENERATE VAO {}", ID);
+		Bind();
 	}
 	
 	VertexArrayObject::~VertexArrayObject()

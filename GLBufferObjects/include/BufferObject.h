@@ -32,7 +32,7 @@ public:
 	/// </summary>
 	virtual void Bind(GLint bufferType) const
 	{
-		SPDLOG_DEBUG("BIND {}", ID);
+		//SPDLOG_DEBUG("BIND {}", ID);
 		glBindBuffer(bufferType, ID);
 	}
 
@@ -41,13 +41,13 @@ public:
 	/// </summary>
 	virtual void Unbind(GLint bufferType) const
 	{
-		SPDLOG_DEBUG("UNBIND {}", ID);
+		//SPDLOG_DEBUG("UNBIND {}", ID);
 		glBindBuffer(bufferType, 0);
 	}
 
 public:
 	BufferObject() = default;
-	~BufferObject() = default;
+	virtual ~BufferObject() = default;
 };
 }
 

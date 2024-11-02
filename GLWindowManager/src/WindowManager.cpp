@@ -10,11 +10,11 @@ GLFWwindow* WindowManager::CreateGLFWWindow()
 	SPDLOG_INFO("Creating window");
 	try
 	{
-		this->m_windowInstance = glfwCreateWindow(this->m_windowWidth,
-												  this->m_windowHeight,
-												  this->m_windowName, NULL, NULL);
+		m_windowInstance = glfwCreateWindow(m_windowWidth,
+											m_windowHeight,
+											m_windowName, NULL, NULL);
 
-		if (this->m_windowInstance == NULL)
+		if (m_windowInstance == NULL)
 		{
 			const char* error = "Failed to create window instance. Window was NULL";
 			glfwTerminate();
@@ -60,12 +60,39 @@ GLFWwindow* WindowManager::GetWindow()
 	return m_windowInstance;
 }
 
-void WindowManager::ProcessInput(GLFWwindow* window)
+void WindowManager::ProcessInput()
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (glfwGetKey(m_windowInstance, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
-		glfwSetWindowShouldClose(window, true);
+		glfwSetWindowShouldClose(m_windowInstance, true);
 	}
+	if (glfwGetKey(m_windowInstance, GLFW_KEY_1) == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	if (glfwGetKey(m_windowInstance, GLFW_KEY_2) == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	if (glfwGetKey(m_windowInstance, GLFW_KEY_3) == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	}
+}
+
+void WindowManager::UpdateFpsCounter() {
+	double current_seconds = glfwGetTime();
+	double elapsed_seconds = current_seconds - previous_seconds;
+
+	if (elapsed_seconds > 0.25) {
+		previous_seconds = current_seconds;
+		double fps = (double)frame_count / elapsed_seconds;
+		char tmp[128];
+		sprintf(tmp, "%s FPS: %.2f", m_windowName, fps);
+		glfwSetWindowTitle(m_windowInstance, tmp);
+		frame_count = 0;
+	}
+	frame_count++;
 }
 
 void WindowManager::ViewportResizeCb(GLFWwindow* /*window*/, int width, int height)
@@ -79,9 +106,9 @@ void WindowManager::SetResolution(int width, int height)
 	m_windowHeight = height;
 	m_windowWidth = width;
 
-	if (this->m_windowInstance)
+	if (m_windowInstance)
 	{
-		glfwSetWindowSize(this->m_windowInstance, m_windowWidth, m_windowHeight);
+		glfwSetWindowSize(m_windowInstance, m_windowWidth, m_windowHeight);
 	}
 }
 
@@ -106,6 +133,12 @@ void WindowManager::FillScreenColor(const GLfloat R,
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void WindowManager::Update()
+{
+	UpdateFpsCounter();
+	ProcessInput();
+}
+
 WindowManager::WindowManager(const char* name)
 {
 	SPDLOG_DEBUG("Initialising OpenGL");
@@ -121,8 +154,11 @@ WindowManager::WindowManager(const char* name)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 
+	//Anti-Aliasing Hint
+	glfwWindowHint(GLFW_SAMPLES, 16);
+
 	m_windowName = name;
-	SetResolution(400, 400);
+	SetResolution(800, 600);
 }
 
 WindowManager::~WindowManager()

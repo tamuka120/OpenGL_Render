@@ -24,16 +24,23 @@ namespace GLShader
 		/// <summary>
 		/// Make this VAO the current Vertex Buffer Object in the OpenGL state.
 		/// </summary>
-		virtual void Bind() const { BufferObject::Bind(GL_ARRAY_BUFFER); }
+		virtual void Bind() const;
 
 		/// <summary>
 		/// Set the current Vertex Buffer Object to nothing in the OpenGL state.
 		/// </summary>
-		virtual void Unbind() const { BufferObject::Unbind(GL_ARRAY_BUFFER); }
+		virtual void Unbind() const;
+
+		size_t GetSize() const
+		{
+			return m_size;
+		}
 
 		VertexBufferObject() = default;
-		VertexBufferObject(const GLfloat* vertices, int size);
+		VertexBufferObject(const GLfloat* vertices, size_t size);
 		~VertexBufferObject();
+	private:
+		size_t m_size = 0;
 	};
 }
 

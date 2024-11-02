@@ -11,6 +11,8 @@ private:
 	int m_windowHeight;
 	const char* m_windowName;
 	GLFWwindow* m_windowInstance = nullptr;
+	double previous_seconds = 0;
+	int frame_count;
 
 	// OpenGL Callbacks
 
@@ -37,12 +39,7 @@ public:
 	/// <returns>The window instance.</returns>
 	GLFWwindow* GetWindow();
 
-	/// <summary>
-	/// Check if there is a key has been press in the current window instance and execute
-	/// the function relate to the key.
-	/// </summary>
-	/// <param name="window">The window instance.</param>
-	void ProcessInput(GLFWwindow* window);
+
 
 	/// <summary>
 	/// In the event that the window is resized the viewport to match the new viewport.
@@ -69,6 +66,19 @@ public:
 	/// <param name="A">Alpha component.</param>
 	void FillScreenColor(GLfloat R, GLfloat G, GLfloat B, GLfloat A);
 
+	void Update();
+private:
+	/// <summary>
+	/// Check if there is a key has been press in the current window instance and execute
+	/// the function relate to the key.
+	/// </summary>
+	/// <param name="window">The window instance.</param>
+	void ProcessInput();
+
+	void UpdateFpsCounter() ;
+
+
+public:
 	/// <summary>
 	/// Initialise OpenGLWindowManager
 	/// </summary>
