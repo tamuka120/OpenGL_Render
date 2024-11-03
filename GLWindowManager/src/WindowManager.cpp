@@ -135,8 +135,10 @@ void WindowManager::FillScreenColor(const GLfloat R,
 
 void WindowManager::Update()
 {
-	UpdateFpsCounter();
+	SPDLOG_TRACE("POLL EVENTS");
+	glfwPollEvents();
 	ProcessInput();
+	UpdateFpsCounter();
 }
 
 WindowManager::WindowManager(const char* name)

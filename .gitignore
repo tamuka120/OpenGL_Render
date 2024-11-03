@@ -8,5 +8,6 @@
 
 /bin
 /build
+/build_cache
 /out
 /.vscode

@@ -10,9 +10,9 @@ project(OpenGL_Render)
 
 cmake_policy(SET CMP0074 NEW)
 
-if(WIN32)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
-endif(WIN32)
+# if(WIN32)
+# 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
+# endif(WIN32)
 
 add_subdirectory(GLBufferObjects)
 add_subdirectory(GLShader)

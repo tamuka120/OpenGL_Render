@@ -5,8 +5,7 @@
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "${projectDir}\\out\\build\\${name}",
-
+      "buildRoot": "${projectDir}\\build_cache",
 
       "cmakeCommandArgs": "-Wno-dev",
       "buildCommandArgs": "-v",

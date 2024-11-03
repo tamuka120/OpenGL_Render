@@ -1,5 +1,8 @@
 set(RESOURCES_DIR ${CMAKE_SOURCE_DIR}/resources)
 set(SHADER_DIR ${RESOURCES_DIR}/shaders)
+set(IMAGES_DIR ${RESOURCES_DIR}/images)
+
+# Save paths to resources in generated header file
 configure_file (resources.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/resources.h) 
 
 add_library(

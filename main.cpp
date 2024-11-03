@@ -1,3 +1,4 @@
+#include "memory"
 #include <mutex>
 #include <random>
 #include <thread>
@@ -14,12 +15,12 @@
 #include "VertexBufferObject.h"
 #include "WindowManager.h"
 
+
 void drawArrays(
 	GLShader::GLShaderProgram& ShaderProgram,
 	GLShader::VertexArrayObject& VAO,
 	float intensity)
 {
-	//float timeValue = glfwGetTime();
 	GLuint id = ShaderProgram.GetID();
 	glUseProgram(id);
 	glUniform1f(
@@ -73,10 +74,8 @@ int main()
 		.365, .365, 0, // top
 	};
 
-
-
 	WindowManager WindowManager("OpenGL Window");
-	GLFWwindow * Window = WindowManager.CreateGLFWWindow();
+	const auto Window = std::make_unique<GLFWwindow*>(WindowManager.CreateGLFWWindow());
 
 	GLShader::GLShaderProgram ShaderProgram1;
 	GLShader::GLShaderProgram ShaderProgram2;
@@ -101,21 +100,17 @@ int main()
 	VAO2.BindAllBuffers();
 	VAO2.LinkBuffers();
 
-	while (!glfwWindowShouldClose(Window))
+	while (!glfwWindowShouldClose(*Window))
 	{
-		SPDLOG_TRACE("POLL EVENTS");
-		glfwPollEvents();
-
 		WindowManager.Update();
 		WindowManager.FillScreenColor(Background.data());
 
-		float timeValue = glfwGetTime();
-		drawElements(ShaderProgram1, VAO1, sin(timeValue) / 2.0f + 0.5f);
-		drawArrays(ShaderProgram2, VAO2, cos(timeValue) / 2.0f + 0.5f);
+		float time = glfwGetTime();
+		drawElements(ShaderProgram1, VAO1, sin(time) / 2.0f + 0.5f);
+		//drawArrays(ShaderProgram2, VAO2, cos(time) / 2.0f + 0.5f);
 
-		glfwSwapBuffers(Window);
+		glfwSwapBuffers(*Window);
 	}
-
 
 	return 0;
 }
