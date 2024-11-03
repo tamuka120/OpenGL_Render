@@ -88,7 +88,7 @@ void WindowManager::UpdateFpsCounter() {
 		previous_seconds = current_seconds;
 		double fps = (double)frame_count / elapsed_seconds;
 		char tmp[128];
-		sprintf(tmp, "%s FPS: %.2f", m_windowName, fps);
+		sprintf(tmp, "%s FPS: %.f", m_windowName, fps);
 		glfwSetWindowTitle(m_windowInstance, tmp);
 		frame_count = 0;
 	}

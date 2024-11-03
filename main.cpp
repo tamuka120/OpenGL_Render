@@ -56,7 +56,7 @@ int main()
 	spdlog::set_level(spdlog::level::info);
 
 	std::array<GLfloat,4> Background{ (51.f / 255), (76.f / 255), (76.f / 255),1 };
-	std::array<GLfloat, 12> triangleLeft{
+	std::array<GLfloat, 12> Rect{
 		 0.5f,  0.5f, 0.0f,  // top right
 		 0.5f, -0.5f, 0.0f,  // bottom right
 		-0.5f, -0.5f, 0.0f,  // bottom left
@@ -68,7 +68,7 @@ int main()
 	   1, 2, 3    // second triangle
 	};
 
-	std::array<GLfloat, 9> triangleRight{
+	std::array<GLfloat, 9> Triangle{
 		.25, 0, 0,     // bottom left
 		.5, 0, 0,	   // bottom right
 		.365, .365, 0, // top
@@ -88,14 +88,14 @@ int main()
 	//glBindAttribLocation(ShaderProgram2.GetID(), 0, "vertex_position");
 
 	// Buffers will bind and unbind during initialisation so other objects can link them as needed.
-	GLShader::VertexBufferObject VBO1(triangleLeft.data(), sizeof(triangleLeft));
+	GLShader::VertexBufferObject VBO1(Rect.data(), sizeof(Rect));
 	GLShader::ElementBufferObject EBO1(indices.data(), sizeof(indices));
 	GLShader::VertexArrayObject VAO1(&EBO1, &VBO1);
 	VAO1.BindAllBuffers();
 	VAO1.LinkBuffers();
 
 	GLShader::ElementBufferObject EBO2;
-	GLShader::VertexBufferObject VBO2(triangleRight.data(), sizeof(triangleRight));
+	GLShader::VertexBufferObject VBO2(Triangle.data(), sizeof(Triangle));
 	GLShader::VertexArrayObject VAO2(&EBO2, &VBO2);
 	VAO2.BindAllBuffers();
 	VAO2.LinkBuffers();
