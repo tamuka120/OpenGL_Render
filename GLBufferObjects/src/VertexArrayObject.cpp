@@ -15,6 +15,9 @@ namespace GLShader
 
 	void VertexArrayObject::BindAllBuffers() const
 	{
+		// The VertexArrayObject has to be bound first as its just a container of pointers to buffer
+		// objects. Any buffer object bound after a VAO is linked the bound VAO.
+
 		Bind();
 		VertexBuffer->Bind();
 		ElementBuffer->Bind();
@@ -33,7 +36,6 @@ namespace GLShader
 	{
 		glGenVertexArrays(1, &ID);
 		SPDLOG_DEBUG("GENERATE VAO {}", ID);
-		Bind();
 	}
 	
 	VertexArrayObject::~VertexArrayObject()

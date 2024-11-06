@@ -22,14 +22,14 @@ namespace GLShader
 		glGenBuffers(1, &ID);
 		SPDLOG_DEBUG("GENERATE EBO {}", ID);
 
-		Bind();
+		ElementBufferObject::Bind();
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
-		Unbind();
+		ElementBufferObject::Unbind();
 	}
 
 	ElementBufferObject::~ElementBufferObject()
 	{
-		Unbind();
+		ElementBufferObject::Unbind();
 		SPDLOG_DEBUG("TERMINATE EBO {}", ID);
 	}
 }

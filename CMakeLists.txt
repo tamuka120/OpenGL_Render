@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/thirdparty/modules)
 set(GLFW3_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/GLFW/glfw-3.4)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-dev")
 
 project(OpenGL_Render)
 
@@ -31,9 +32,12 @@ target_link_libraries(OpenGL_Render GLWindowManager)
 target_link_libraries(OpenGL_Render GLAD) 
 target_link_libraries(OpenGL_Render GLFW3)
 target_link_libraries(OpenGL_Render spdlog)
+# target_link_libraries(OpenGL_Render stb_image)
+target_link_libraries(OpenGL_Render glm)
 
 set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=-*,modernize-*")
 set_target_properties(OpenGL_Render PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+
 
 target_compile_definitions(OpenGL_Render 
 	PRIVATE 

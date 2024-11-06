@@ -130,7 +130,7 @@ void WindowManager::FillScreenColor(const GLfloat R,
 	glClearColor(R, G, B, A);
 
 	// Clear the back buffer and set.
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void WindowManager::Update()

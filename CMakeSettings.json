@@ -7,14 +7,12 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\build_cache",
 
-      "cmakeCommandArgs": "-Wno-dev",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
 
       "variables": [],
       "enableClangTidyCodeAnalysis": true,
       "enableMicrosoftCodeAnalysis": true,
-      "clangTidyChecks": "-*,clang-analyzer-cplusplus-*,cppcoreguidelines-*,-cppcoreguidelines-avoid-magic-numbers*",
       "intelliSenseMode": "windows-msvc-x64"
     }
   ]
