@@ -9,7 +9,7 @@
 
 #include <glad/glad.h>
 
-#include "spdlog/spdlog.h"
+#include <spdlog/spdlog.h>
 
 /**
   * Vertex Array Object. Acts as a container for OpenGL Buffer Objects.

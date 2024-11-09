@@ -1,8 +1,10 @@
 #include "GLBaseShader.h"
 
-#include "spdlog/spdlog.h"
 #include <string>
 #include <fstream>
+
+#include <spdlog/spdlog.h>
+
 #include "resources.h"
 
 namespace

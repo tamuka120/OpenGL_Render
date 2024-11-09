@@ -1,7 +1,7 @@
 #include "GLTexture.h"
 
+#include <spdlog/spdlog.h>
 #include "stb_image/stb_image.h"
-#include "spdlog/spdlog.h"
 
 void GLShader::GLTexture::Bind()
 {

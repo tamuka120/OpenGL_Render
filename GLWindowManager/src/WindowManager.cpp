@@ -1,9 +1,60 @@
 #include "WindowManager.h"
 
-#include <iostream>
-#include <sstream>
+#include <memory>
 
-#include "spdlog/spdlog.h"
+#include <spdlog/spdlog.h>
+
+namespace
+{
+	std::shared_ptr<GLCamera> CurrentCamera;
+
+	void ViewportResizeCallback(GLFWwindow* /*window*/, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+	}
+
+	void MouseScrollCallback(GLFWwindow* /*window*/, double xpos, double ypos)
+	{
+		CurrentCamera->MouseScroll(xpos, ypos);
+	}
+
+	void MouseLookCallback(GLFWwindow* /*window*/, double xpos, double ypos)
+	{
+		CurrentCamera->MouseLook(xpos, ypos);
+	}
+
+	void KeyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (action == GLFW_PRESS)
+		{
+			switch (key)
+			{
+			case GLFW_KEY_ESCAPE:
+				glfwSetWindowShouldClose(window, true);
+				break;
+			case GLFW_KEY_1:
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				break;
+			case GLFW_KEY_2:
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				break;
+			case GLFW_KEY_3:
+				glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	void RegisterCallbacks(GLFWwindow* window)
+	{
+		glfwSetFramebufferSizeCallback(window, &ViewportResizeCallback);
+		glfwSetCursorPosCallback(window, &MouseLookCallback);
+		glfwSetScrollCallback(window, &MouseScrollCallback);
+		glfwSetKeyCallback(window, &KeyInputCallback);
+	}
+}
 
 GLFWwindow* WindowManager::CreateGLFWWindow()
 {
@@ -22,9 +73,7 @@ GLFWwindow* WindowManager::CreateGLFWWindow()
 			throw std::exception(error);
 
 		}
-		glfwSetFramebufferSizeCallback(
-			m_windowInstance, (GLFWframebuffersizefun)&WindowManager::ViewportResizeCb);
-
+		RegisterCallbacks(m_windowInstance);
 		glfwMakeContextCurrent(m_windowInstance);
 
 		gladLoadGL();
@@ -35,6 +84,9 @@ GLFWwindow* WindowManager::CreateGLFWWindow()
 
 		// Tell OpenGL the area it can render in.
 		glViewport(0, 0, m_windowWidth, m_windowHeight);
+		glEnable(GL_DEPTH_TEST);
+		// tell GLFW to capture our mouse
+		glfwSetInputMode(m_windowInstance, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 	catch (const std::exception& ex)
 	{
@@ -58,46 +110,6 @@ void WindowManager::TerminateWindow()
 GLFWwindow* WindowManager::GetWindow()
 {
 	return m_windowInstance;
-}
-
-void WindowManager::ProcessInput()
-{
-	if (glfwGetKey(m_windowInstance, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(m_windowInstance, true);
-	}
-	if (glfwGetKey(m_windowInstance, GLFW_KEY_1) == GLFW_PRESS)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	if (glfwGetKey(m_windowInstance, GLFW_KEY_2) == GLFW_PRESS)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (glfwGetKey(m_windowInstance, GLFW_KEY_3) == GLFW_PRESS)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-	}
-}
-
-void WindowManager::UpdateFpsCounter() {
-	double current_seconds = glfwGetTime();
-	double elapsed_seconds = current_seconds - previous_seconds;
-
-	if (elapsed_seconds > 0.25) {
-		previous_seconds = current_seconds;
-		double fps = (double)frame_count / elapsed_seconds;
-		char tmp[128];
-		sprintf(tmp, "%s FPS: %.f", m_windowName, fps);
-		glfwSetWindowTitle(m_windowInstance, tmp);
-		frame_count = 0;
-	}
-	frame_count++;
-}
-
-void WindowManager::ViewportResizeCb(GLFWwindow* /*window*/, int width, int height)
-{
-	glViewport(0, 0, width, height);
 }
 
 void WindowManager::SetResolution(int width, int height)
@@ -132,13 +144,30 @@ void WindowManager::FillScreenColor(const GLfloat R,
 	// Clear the back buffer and set.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-
 void WindowManager::Update()
 {
 	SPDLOG_TRACE("POLL EVENTS");
 	glfwPollEvents();
-	ProcessInput();
-	UpdateFpsCounter();
+
+	float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+
+	// There is a delay in callbacks from pressed to repeat so to ensure input is syncronous we
+	// have to query it manually in the update function
+	for (const int key : CameraKeyInputs)
+	{
+		if (int action = glfwGetKey(m_windowInstance, key); action & (GLFW_PRESS | GLFW_REPEAT))
+		{
+			CurrentCamera->KeyInput(key, action, deltaTime);
+		}
+	}
+}
+
+void WindowManager::SetCurrentCamera(std::shared_ptr<GLCamera> camera)
+{
+	CurrentCamera = camera;
 }
 
 WindowManager::WindowManager(const char* name)

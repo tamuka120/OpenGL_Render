@@ -2,12 +2,12 @@
 
 in vec3 vertex_position;
 in vec2 texture_coords;
-
-out vec2 texCoords;
-
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 perspective;
+
+out vec2 texCoords;
+
 
 void main()
 {
