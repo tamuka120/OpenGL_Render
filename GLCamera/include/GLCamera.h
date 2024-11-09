@@ -55,9 +55,9 @@ private:
 	float LastX = 0.0f;
 	float LastY = 0.0f;
 
-	float MaxPitch = 89.0f;
-	float MinPitch = -89.0f;
-	float MaxFOV= 90.f;
+	float MaxPitch = 89.f;
+	float MinPitch = -89.f;
+	float MaxFOV= 120.f;
 	float MinFOV = 1.f;
 
 	CameraProperties Properties{};
